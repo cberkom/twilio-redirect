@@ -71,9 +71,7 @@ class Region {
     array(
       'name' => 'North Central'
       'phone_number' => new PhoneNumber(''),
-      'area_codes' => array(
-        
-      )
+      'area_codes' => array()
     ),
     array(
       'name' => 'North East'
@@ -135,7 +133,7 @@ class Region {
     $phone_number = $region['phone_number'];
   }
 
-  public function find_region($area_code) {
+  private function find_region($area_code) {
     foreach ($regions as $r) {
       foreach ($r['area_codes'] as $state => $list) {
         if (in_array($area_code, $list)) { 
@@ -143,7 +141,7 @@ class Region {
         }
       }
     }
-    // If not found, return a fallback:
+    // If not found, return the fallback region:
     return $fallback_region;
   }
 }
