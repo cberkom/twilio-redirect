@@ -9,7 +9,23 @@ class BasicSpec {
     if($subject == $value) {
       echo "PASS: $subject == $value";
     } else {
-      echo "FAIL: $subject != $value";
+      echo "FAIL: $subject != $value!";
+    }
+  }
+
+  public function assert_is_set($subject, $description) {
+    if(isset($subject)) {
+      echo "PASS: $description is set";
+    } else {
+      echo "FAIL: $description is NOT set!";
+    }
+  }
+
+  public function assert_is_array($subject, $description) {
+    if(is_array($subject)) {
+      echo "PASS: $description is an array";
+    } else {
+      echo "FAIL: $description is NOT an array!";
     }
   }
 }
@@ -36,15 +52,22 @@ class RegionSpec extends BasicSpec {
   public function run() {
     echo "When area code is known:"
     $r = new Region('360');
-    assert_equal($r->state, 'wa');
-    assert_equal($r->region, 'west');
-    assert_equal($r->phone_number, '+12223334444');
+    assert_equal($r->name, 'Northwest');
+    assert_equal($r->phone_number, '+16615887337');
 
     echo "When area code NOT known:"
     $r = new Region('000');
-    assert_equal($r->state, 'Unknown');
-    assert_equal($r->region, 'Unknown');
+    assert_equal($r->name, 'Unknown');
     assert_equal($r->phone_number, '+13334445555');
+
+    // All regions are constructed properly
+    echo "Validate that regions are constructed property:";
+    $r = new Region('000')
+    foreach ($r->regions as $region) {
+      assert_is_set($region['name'], 'region name');
+      assert_is_set($region['phone_number'], 'region phone_number ('.$region['name'].')');
+      assert_is_array($region['area_codes'], 'region area_codes ('.$region['name'].')');
+    }
   }
 }
 
