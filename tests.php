@@ -1,6 +1,6 @@
 <?php
 
-require('classes.php');
+require('require_all.php');
 
 class BasicSpec {
   private __construct() { }

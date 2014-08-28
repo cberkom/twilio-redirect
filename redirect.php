@@ -1,6 +1,6 @@
 <?php
 
-require('classes.php');
+require('require_all.php');
 
 $call = new Call($_POST);
 header ("Content-Type:text/xml");
