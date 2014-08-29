@@ -1,6 +1,6 @@
 <?php 
 require('require_all.php');
-error_reporting(E_ALL);
+error_reporting(0);
 
 // Log Completed Calls to Google Analytics
 // http://dbgonz.com/tutorials/phone-call-attribution-with-twilio-and-google-universal-analytics/
@@ -28,6 +28,5 @@ $campaignName = $call->region->name;
  
 file_get_contents("http://www.google-analytics.com/collect?v=1&tid=$gatid&cid=$uuid&t=event&ec=Twilio&ea=Call&el=$callStatus&ev=$callDuration&cs=$campaignSource&cn=$campaignName&cm=$campaignMedium");
 
-header("Status: 200"); 
-exit;
+exit(header("Status: 200 OK"));
 ?>
