@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+error_reporting(0);
 require('require_all.php');
 
 $call = new InboundCall($_POST);
