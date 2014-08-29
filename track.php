@@ -7,7 +7,7 @@ error_reporting(E_ALL);
  
 //Fill in your Google Analytics Tracking ID (looks like with UA-XXXXXXX-X)
 //This can be found in the property settings of your Google Analytics account
-$gatid = 'UA-XXXXXXX-X';
+$gatid = 'UA-9838022-1';
  
 //Create a unique ID (required for all measurement protocol hits)
 $uuid = uniqid();
@@ -25,8 +25,26 @@ $call = new InboundCall($_POST);
 $campaignSource = 'sales number';
 $campaignMedium = 'call in';
 $campaignName = $call->region->name;
- 
-send_get_request("http://www.google-analytics.com/collect?v=1&tid=$gatid&cid=$uuid&t=event&ec=Twilio&ea=Call&el=$callStatus&ev=$callDuration&cs=$campaignSource&cn=$campaignName&cm=$campaignMedium");
 
-exit(header("Status: 200 OK"));
+$ga_params = array(
+  'v'   => 1,
+  'tid' => $gatid,
+  'cid' => $uuid,
+  't'   => 'event',
+  'ec'  => 'Twilio',         // Event category
+  'ea'  => 'Call',           // Event action
+  'el'  => $callStatus,      // Event label
+  'ev'  => $callDuration,    // Event value
+  'cs'  => $campaignSource,  // Campaign source
+  'cn'  => $campaignName,    // Campaign name
+  'cm'  => $campaignMedium   // Campaign medium
+);
+
+$ga_url = "http://www.google-analytics.com/collect?" . http_build_query($ga_params);
+$ga_response = send_get_request($ga_url);
+
+echo "<p> REQUEST: $ga_url </p>";
+echo "<div> RESPONSE: $ga_response </div>";
+
+exit;
 ?>

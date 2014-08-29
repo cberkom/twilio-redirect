@@ -2,7 +2,7 @@
 
 require('require_all.php');
 
-error_reporting(E_ALL);
+error_reporting(0);
 
 class BasicSpec {
   public $failures = 0;
