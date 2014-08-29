@@ -8,7 +8,7 @@ header ("Content-Type:text/xml");
 
 ?><?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Dial action="<?php echo $site_domain . '/track.php' ?>">
+  <Dial timeout="45" action="<?php echo $site_domain . '/track.php' ?>">
     <Number>
       <?php echo $call->destination_number; ?>
     </Number>
