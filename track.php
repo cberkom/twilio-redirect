@@ -7,7 +7,7 @@ error_reporting(E_ALL);
  
 //Fill in your Google Analytics Tracking ID (looks like with UA-XXXXXXX-X)
 //This can be found in the property settings of your Google Analytics account
-$gatid = 'UA-9838022-1';
+$gatid = 'UA-462890-1';
  
 //Create a unique ID (required for all measurement protocol hits)
 $uuid = uniqid();
