@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL);
 require('require_all.php');
 $site_domain = 'http://' . $_SERVER["SERVER_NAME"];
 
