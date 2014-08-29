@@ -123,7 +123,7 @@ class Region {
 
   public $fallback_region = array(
     'name' => 'Default',
-    'phone_number' => '333-444-5555',
+    'phone_number' => '360-718-9934',
     'area_codes' => array()
   );
   
@@ -134,6 +134,9 @@ class Region {
   }
 
   private function find_region($area_code) {
+    // TESTING:
+    return $this->fallback_region;
+
     foreach ($this->regions as $r) {
       foreach ($r['area_codes'] as $state => $list) {
         if (in_array($area_code, $list)) { 
