@@ -2,113 +2,131 @@
 
 require('require_all.php');
 
+error_reporting(E_ALL);
+
 class BasicSpec {
-  private __construct() { }
+  public $failures = 0;
+
+  public function __construct() { }
 
   public function assert_equal($subject, $value) {
     if($subject == $value) {
-      echo "PASS: '$subject' == '$value'";
+      echo "PASS: '$subject' == '$value' \n";
     } else {
-      echo "FAIL: '$subject' != '$value'!";
+      echo "FAIL: '$subject' != '$value'! \n";
+      $this->failures ++;
     }
   }
 
   public function assert_is_set($subject, $description) {
     if(isset($subject)) {
-      echo "PASS: $description is set";
+      echo "PASS: $description is set \n";
     } else {
-      echo "FAIL: $description is NOT set!";
+      echo "FAIL: $description is NOT set! \n";
+      $this->failures ++;
     }
   }
 
   public function assert_is_array($subject, $description) {
     if(is_array($subject)) {
-      echo "PASS: $description is an array";
+      echo "PASS: $description is an array \n";
     } else {
-      echo "FAIL: $description is NOT an array!";
+      echo "FAIL: $description is NOT an array! \n";
+      $this->failures ++;
     }
   }
 
   public function assert_matches($subject, $regex) {
     if(preg_match($regex, $subject)) {
-      echo "PASS: '$subject' matches expected pattern";
+      echo "PASS: '$subject' matches expected pattern \n";
     } else {
-      echo "FAIL: '$subject' does NOT match expected pattern!";
+      echo "FAIL: '$subject' does NOT match expected pattern! \n";
+      $this->failures ++;
     }
   }
 }
 
 class PhoneNumberSpec extends BasicSpec {
-  private __construct() { }
+  public function __construct() { }
 
   public function run() {
-    echo 'Running PhoneNumberSpec...';
+    echo "Running PhoneNumberSpec... \n";
 
-    echo "When number includes US country code:"
-    $p = new PhoneNumber('+13607189934')
-    assert_equal($p->number, '+13607189934');
-    assert_equal($p->area_code, '360');
+    echo "When number includes US country code: \n";
+    $p = new PhoneNumber('+13607189934');
+    $this->assert_equal($p->number, '+13607189934');
+    $this->assert_equal($p->area_code, '360');
 
-    echo "When number includes foreign country code:"
-    echo "TODO: this needs work."
+    echo "When number does NOT include country code: \n";
+    $p = new PhoneNumber('(360) 718-9934');
+    $this->assert_equal($p->number, '+13607189934');
+    $this->assert_equal($p->area_code, '360');
 
-    echo "When number does NOT include country code:"
-    $p = new PhoneNumber('(360) 718-9934')
-    assert_equal($p->number, '+13607189934');
-    assert_equal($p->area_code, '360');
+    echo ($this->failures > 0) ? "$this->failures FAILED TESTS!" : "All tests passed!";
   }
 }
 
 class RegionSpec extends BasicSpec {
-  private __construct() { }
+  public function __construct() { }
 
   public function run() {
-    echo 'Running RegionSpec...';
+    echo "Running RegionSpec... \n";
 
-    echo "When area code is known:"
+    echo "When area code is known: \n";
     $r = new Region('360');
-    assert_equal($r->name, 'Northwest');
-    assert_equal($r->phone_number, '+16615887337');
+    $this->assert_equal($r->name, 'Northwest');
+    $this->assert_equal($r->phone_number, '+15035640955');
 
-    echo "When area code NOT known:"
+    echo "When area code NOT known: \n";
     $r = new Region('000');
-    assert_equal($r->name, 'Default');
-    assert_matches($r->phone_number, '/\+[0-9]{11}/');
+    $this->assert_equal($r->name, 'Default');
+    $this->assert_matches($r->phone_number, '/\+[0-9]{11}/');
 
     // All regions are constructed properly
-    echo "Validate that regions are constructed property:";
-    $r = new Region('000')
+    echo "Validate that regions are constructed property: \n";
+    $r = new Region('000');
     foreach ($r->regions as $region) {
-      assert_is_set($region['name'], 'region name');
-      assert_is_set($region['phone_number'], 'region phone_number ('.$region['name'].')');
-      assert_is_array($region['area_codes'], 'region area_codes ('.$region['name'].')');
+      $this->assert_is_set($region['name'], 'region name');
+      $this->assert_is_set($region['phone_number'], 'region phone_number ('.$region['name'].')');
+      $this->assert_is_array($region['area_codes'], 'region area_codes ('.$region['name'].')');
     }
+
+    echo ($this->failures > 0) ? "$this->failures FAILED TESTS!" : "All tests passed!";
   }
 }
 
 class InboundCallSpec extends BasicSpec {
-  private __construct() { }
+  public function __construct() { }
 
   public function run() {
-    echo 'Running InboundCallSpec...';
+    echo "Running InboundCallSpec... \n";
 
-    echo "It responds correctly when passed a valid Florida number:"
+    echo "It responds correctly when passed a valid Florida number: \n";
     $c = new InboundCall(array('From' => '+13051112222'));
-    assert_equals($c->region->name, 'Florida');
-    assert_equals($c->destination_number, '+13053963679');
+    $this->assert_equal($c->region->name, 'Florida');
+    $this->assert_equal($c->destination_number, '+13053963679');
 
-    echo "It degrades gracefully when passed random data:"
+    echo "It degrades gracefully when passed random data: \n";
     $c = new InboundCall(array('Unexpected Param' => 'random'));
-    assert_equals($c->region->name, 'Default');
-    assert_matches($c->destination_number, '/\+[0-9]{11}/');
+    $this->assert_equal($c->region->name, 'Default');
+    $this->assert_matches($c->destination_number, '/\+[0-9]{11}/');
+
+    echo ($this->failures > 0) ? "$this->failures FAILED TESTS!" : "All tests passed!";
   }
 }
 
-
+echo "<h1>Twilio-Redirect Test Suite</h1> \n";
 echo "<pre>"; // Display each echo statement on new line
 
-new PhoneNumberSpec().run();
-new RegionSpec().run();
-new InboundCallSpec().run();
+$spec = new PhoneNumberSpec();
+$spec->run();
+echo "\n\n";
+$spec = new RegionSpec();
+$spec->run();
+echo "\n\n";
+$spec = new InboundCallSpec();
+$spec->run();
+
+echo "</pre>";
 
 ?>

@@ -2,7 +2,7 @@
 
 require('require_all.php');
 
-$call = new Call($_POST);
+$call = new InboundCall($_POST);
 header ("Content-Type:text/xml");
 
 ?>

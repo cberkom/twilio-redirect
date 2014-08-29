@@ -1,14 +1,20 @@
 <?php
 
+// PhoneNumber Class
+//
+// NOTE: only supports +1 country code right now (US, Canada, Puerto Rico, Dominican Republic)
+// TODO: Support Mexico's country code (+52)
 class PhoneNumber {
   public $number = '';
+  public $area_code = '';
 
-  private __construct($num) { 
-    $number = format($num);
+  public function __construct($num) { 
+    $this->number = $this->format($num);
+    $this->area_code = $this->get_area_code($this->number);
   }
 
-  public function area_code() {
-    return substr($number, 2, 3) #Ignore the '+1' at the beginning of the number (enforced by format function)
+  public function get_area_code($num) {
+    return substr($num, 2, 3); #Ignore the '+1' at the beginning of the number (enforced by format function)
   }
 
   public function __toString() {
@@ -18,8 +24,8 @@ class PhoneNumber {
   private function format($num)
   {
     $num = strval($num);
-    $num = only_digits($num);
-    $num = add_country_code($num);
+    $num = $this->only_digits($num);
+    $num = $this->add_country_code($num);
     return '+' . $num;
   }
 
